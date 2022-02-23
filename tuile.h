@@ -1,4 +1,4 @@
-class labyrinthe
+class tuile
 {
     public:
 

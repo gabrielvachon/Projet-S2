@@ -1,0 +1,7 @@
+class joueur
+{
+    public:
+
+    private:
+    
+};
