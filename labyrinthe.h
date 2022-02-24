@@ -1,6 +1,8 @@
 #include <iostream>
 #include "tuile.h"
 
+using namespace std;
+
 class labyrinthe
 {
     public:

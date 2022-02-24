@@ -29,8 +29,8 @@ void labyrinthe::afficherLabyrinthe()
     {
         for(int j = 0; j < y; j++)
         {
-            std::cout << tile[i][j];
+            cout << tile[i][j];
         }
-        std::cout << std::endl;
+        cout << std::endl;
     }
 }
