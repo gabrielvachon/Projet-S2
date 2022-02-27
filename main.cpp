@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-    labyrinthe lab;
-    lab.afficherLabyrinthe();
+    cout << "Testing" << endl;
+    Labyrinthe unLabyrinthe(true);
     return 0;
 }

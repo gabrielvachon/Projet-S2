@@ -1,36 +1,85 @@
-#include "labyrinthe.h"
+using namespace std; 
 
-labyrinthe::labyrinthe()
+#include "labyrinthe.h"
+#include "tuile.h"
+
+//--------MODÈLE---------
+//# # # # # # # # # # # #
+//S - - - - - - - - - - #
+//# - # # # T # # - # - #
+//# - # C # - # # - # - #
+//# - - - # - - # - # # #
+//# - # # # # # # - # M #
+//# # # # - - # - - # - #
+//E - - # # - # - # # - #
+//# # - - - - # - # - - #
+//# # # T # - # - # - # #
+//# - - - # - - - - - # #
+//# # # # # # # # # # # #
+
+Labyrinthe::Labyrinthe()
 {
-    x = 30;
-    y = 30;
-    tile[x][y];
+    //tiles[xLenght][yLenght];
     labConstructor();
 }
 
-labyrinthe::~labyrinthe()
+Labyrinthe::Labyrinthe(bool test) : xLenght(12), yLenght(12)
 {
-
-}
-
-void labyrinthe::labConstructor()
-{
+    cout << "New laby";
+    tiles = new Tuile**[xLenght];
+    for (int i = 0; i < yLenght; i++)
+    {
+        tiles[i] = new Tuile*[yLenght];
+    }
+    for (int x = 0; x < xLenght; x++)
+    {
+        for (int y = 0; y < yLenght; y++)
+        {
+            tiles[x][y] = new Tuile('#');
+        }
+        
+    }
     
 }
 
-char labyrinthe::getTile(int i, int j)
+Labyrinthe::~Labyrinthe()
 {
-    return tile[i][j];
+    cout << "bye bye";    
 }
 
-void labyrinthe::afficherLabyrinthe()
+/*Tuile Labyrinthe::getTile(int x, int y)
 {
-    for(int i = 0; i < x; i++)
+    return tiles*[x][y];
+}
+
+Tuile Labyrinthe::getStart(int x, int y)
+{
+
+}
+
+Tuile Labyrinthe::getEnd(int x, int y)
+{
+
+}*/
+
+void Labyrinthe::labConstructor()
+{
+
+}
+
+/*Tuile Labyrinthe::getTile(int x, int y)
+{
+    //return &tiles[x][y];
+}*/
+
+void Labyrinthe::afficherLabyrinthe()
+{
+    for(int x = 0; x < xLenght; x++)
     {
-        for(int j = 0; j < y; j++)
+        for(int y = 0; y < yLenght; y++)
         {
-            cout << tile[i][j];
+            //cout << tiles[x][y];
         }
-        cout << std::endl;
+        cout << endl;
     }
 }

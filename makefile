@@ -1,10 +1,17 @@
 Labyrinthe: main.o joueur.o labyrinthe.o tuile.o 
-	g++ -o main.cpp joueur.cpp labyrinthe.cpp tuile.cpp
-main.o : main.cpp labyrinthe.h joueur.h
-	g++ main.cpp -g -c
+	g++ -o Labyrinthe main.cpp joueur.cpp labyrinthe.cpp tuile.cpp
+
+main.o : main.cpp labyrinthe.h tuile.h joueur.h
+	g++ -g -c main.cpp
+
 labyrinthe.o: labyrinthe.cpp labyrinthe.h tuile.h
-	g++ labyrinthe.cpp -g -c
+	g++ -g -c labyrinthe.cpp
+
 joueur.o: joueur.cpp joueur.h
-	g++ joueur.cpp -g -c
+	g++ -g -c joueur.cpp
+
 tuile.o: tuile.cpp tuile.h
-	g++ tuile.cpp -g -c
+	g++ -g -c tuile.cpp
+
+clean:
+	del *.o
