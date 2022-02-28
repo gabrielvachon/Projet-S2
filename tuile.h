@@ -37,10 +37,15 @@ class Tuile
         string getTypeName();
         char getType();
         void playerEffect(Joueur player); //Applique les effets de la tuile sur le joueur
-
+        void setTuile(char);
+        void setVisited();
+        bool getVisited();
+        void setVisible(bool);
+        bool getVisible();
     private:
         char type;
         bool visited;
+        bool visible;
 };
 
 #endif

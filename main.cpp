@@ -10,33 +10,12 @@ using namespace std;
 int main()
 {
     cout << "Testing" << endl;
-    Labyrinthe unLabyrinthe(true);
+    Labyrinthe lab;
 
     char dir;
     while((dir = getch()) != 'q')
     {
-        switch (dir)
-        {
-        
-        case 'w':
-            
-            break;
-        case 'a':
-
-            break;
-        case 's':
-            
-            break;
-        case 'd':
-            
-            break;
-        
-        default:
-            break;
-
-            
-        }
-        
+        lab.mouvement(dir);
     }
     return 0;
 }

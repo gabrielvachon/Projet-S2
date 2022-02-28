@@ -4,11 +4,10 @@ using namespace std;
 #include <random>
 #include "tuile.h"
 
-Tuile::Tuile()
-{}
+Tuile::Tuile() : visible(false) {}
 
 Tuile::Tuile(char typeTuile)
-: type(typeTuile) {}
+: type(typeTuile), visible(false) {}
 
 Tuile::~Tuile() {}
 
@@ -18,6 +17,10 @@ string Tuile::getTypeName()
     {
         case 'S':
             return "Départ";
+            break;
+
+        case 'X':
+            return "Joueur";
             break;
 
         case 'E':
@@ -52,6 +55,11 @@ char Tuile::getType()
     return type;
 }
 
+void Tuile::setTuile(char c)
+{
+    type = c;
+}
+
 void Tuile::playerEffect(Joueur player)
 {
     int damage;
@@ -84,9 +92,28 @@ void Tuile::playerEffect(Joueur player)
             }
             break;
             
-        default:
-            break;
+    
     }
+}
+
+void Tuile::setVisited()
+{
+    visited = true;
+}
+
+bool Tuile::getVisited()
+{
+    return visited;
+}
+
+void Tuile::setVisible(bool v)
+{
+    visible = v;
+}
+
+bool Tuile::getVisible()
+{
+    return visible;
 }
 
 Tuile & Tuile::operator = (const Tuile& input)
