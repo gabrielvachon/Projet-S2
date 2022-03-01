@@ -16,9 +16,9 @@ class Labyrinthe
         Labyrinthe(string); //Constructeur d'un labyrinthe prédéfini
         ~Labyrinthe();
 
-        //Tuile getTile(int x, int y); //Retourne la case désirée
-        //Tuile getStart(); //Retourne la case départ
-        //Tuile getEnd(); //Retourne la case de fin
+        Tuile* getTile(int x, int y); //Retourne la case désirée
+        position getStart(); //Retourne la case départ
+        position getEnd(); //Retourne la case de fin
         void afficherLabyrinthe(); //Afficher le labyrinthe
         void labConstructor(string);
         bool mouvement(char);
@@ -27,6 +27,7 @@ class Labyrinthe
         //int getYLenght(); //Retourne largeur du labyrinthe
 
     private:
+        bool fight;
         int xLenght;
         int yLenght;
         Tuile*** tiles; //Tableau de tuiles

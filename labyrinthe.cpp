@@ -2,7 +2,9 @@ using namespace std;
 
 #include "labyrinthe.h"
 #include "tuile.h"
+#include "position.h"
 #include <fstream>
+#include <string.h>
 
 //--------MODÈLE---------
 //# # # # # # # # # # # #
@@ -18,9 +20,11 @@ using namespace std;
 //# - - - # - - - - - # #
 //# # # # # # # # # # # #
 
+string tileName;
+
 Labyrinthe::Labyrinthe()
 {
-    //tiles[xLenght][yLenght];
+    player = new Joueur(1, 100);
     labConstructor("modele1.txt");
 }
 
@@ -38,78 +42,76 @@ bool Labyrinthe::mouvement(char c)
 {
     int x = 0;
     int y = 0;
+    Joueur newPlayerStats;
     switch (c)
     {
-    case 'w':
-        x = player->getPos().x;
-        y = player->getPos().y - 1;
-        if(tiles[x][y]->getType() == '#' || y < 0)
-        {
-            return false;
-        }
-        else
-        {
-            tiles[x][y+1]->setTuile('-');
-        }
-        break;
-    case 'd':
-        x = player->getPos().x + 1;
-        y = player->getPos().y;
-        if(tiles[x][y]->getType() == '#' || x > xLenght)
-        {
-            return false;
-        }
-        else
-        {
-            tiles[x-1][y]->setTuile('-');
-        }
-        break;
-    case 's':
-        x = player->getPos().x;
-        y = player->getPos().y + 1;
-        if(tiles[x][y]->getType() == '#' || y > yLenght)
-        {
-            return false;
-        }
-        else
-        {
-            tiles[x][y-1]->setTuile('-');
-        }
-        break;
-    case 'a':
-        x = player->getPos().x - 1;
-        y = player->getPos().y;
-        if(tiles[x][y]->getType() == '#' || x < 0)
-        {
-            return false;
-        }
-        else
-        {
-            tiles[x+1][y]->setTuile('-');
-        }
-        break;
-    
-    default:
-        break;
+        case 'w':
+            x = player->getPos().x; //Garder position en X
+            y = player->getPos().y - 1; //Décrémenter position en Y
+            if(tiles[x][y]->getType() == '#' || y < 0)
+            {
+                return false;
+            }
+            else
+            {
+                tiles[x][y+1]->playerOn = false;
+                newPlayerStats = tiles[x][y]->playerEffect(*player);
+            }
+            break;
+        case 'd':
+            x = player->getPos().x + 1;
+            y = player->getPos().y;
+            if(tiles[x][y]->getType() == '#' || x >= xLenght)
+            {
+                return false;
+            }
+            else
+            {
+                tiles[x-1][y]->playerOn = false;
+                newPlayerStats = tiles[x][y]->playerEffect(*player);
+            }
+            break;
+        case 's':
+            x = player->getPos().x;
+            y = player->getPos().y + 1;
+            if(tiles[x][y]->getType() == '#' || y > yLenght)
+            {
+                return false;
+            }
+            else
+            {
+                tiles[x][y-1]->playerOn = false;
+                newPlayerStats = tiles[x][y]->playerEffect(*player);
+            }
+            break;
+        case 'a':
+            x = player->getPos().x - 1;
+            y = player->getPos().y;
+            if(tiles[x][y]->getType() == '#' || x < 0)
+            {
+                return false;
+            }
+            else
+            {
+                tiles[x+1][y]->playerOn = false;
+                newPlayerStats = tiles[x][y]->playerEffect(*player);
+            }
+            break;
+        
+        default:
+            break;
     }
-    
+    *player = newPlayerStats;
     tiles[x][y]->setVisited();
-    tiles[x][y]->setTuile('X');
+    tiles[x][y]->playerOn = true;
     player->setPos(x,y);
     visibilite(x,y);
     afficherLabyrinthe();
+    return true;
 }
 
 void Labyrinthe::visibilite(int x, int y)
 {
-    for(int y = 0; y < yLenght; y++)
-    {
-        for(int x = 0; x < xLenght; x++)
-        {
-            tiles[x][y]->setVisible(false);
-        }
-    }
-
     if(x == 0)
     {
         tiles[x][y+1]->setVisible(true);
@@ -139,20 +141,47 @@ void Labyrinthe::visibilite(int x, int y)
     }
 }
 
-/*Tuile Labyrinthe::getTile(int x, int y)
+position Labyrinthe::getStart()
 {
-    return tiles*[x][y];
+    for (int x = 0; x < xLenght; x++)
+    {
+        for (int y = 0; y < yLenght; y++)
+        {
+            if(tiles[x][y]->getType() == 'S')
+            {
+                position coorStart;
+                coorStart.x = x;
+                coorStart.y = y;
+                return coorStart;
+            }
+        }
+    }
+    position coorStart;
+    coorStart.x = 0;
+    coorStart.y = 0;
+    return coorStart;
 }
 
-Tuile Labyrinthe::getStart(int x, int y)
+position Labyrinthe::getEnd()
 {
-
+    for (int x = 0; x < xLenght; x++)
+    {
+        for (int y = 0; y < yLenght; y++)
+        {
+            if(tiles[x][y]->getType() == 'E')
+            {
+                position coorStart;
+                coorStart.x = x;
+                coorStart.y = y;
+                return coorStart;
+            }
+        }
+    }
+    position coorStart;
+    coorStart.x = 0;
+    coorStart.y = 0;
+    return coorStart;
 }
-
-Tuile Labyrinthe::getEnd(int x, int y)
-{
-
-}*/
 
 void Labyrinthe::labConstructor(string fname)
 {
@@ -161,7 +190,6 @@ void Labyrinthe::labConstructor(string fname)
     char t;
     string s;
     string nb;
-    player = new Joueur(1, 100);
     if(file.is_open())
     {
         getline(file, s);
@@ -193,24 +221,33 @@ void Labyrinthe::labConstructor(string fname)
             file.get(t);
         }
     }
-    tiles[player->getPos().x][player->getPos().y]->setTuile('X');
+    player->setPos(this->getStart().x, this->getStart().y);
+    tiles[this->getStart().x][this->getStart().y]->playerOn = true;
     afficherLabyrinthe();
     file.close();
 }
 
-/*Tuile Labyrinthe::getTile(int x, int y)
+Tuile* Labyrinthe::getTile(int x, int y)
 {
-    //return &tiles[x][y];
-}*/
+    return tiles[x][y];
+}
 
 void Labyrinthe::afficherLabyrinthe()
 {
+    system("CLS");
     cout << "===Labyrinthe decouvert===\n";
     for(int y = 0; y < yLenght; y++)
     {
         for(int x = 0; x < xLenght; x++)
         {
-            cout << tiles[x][y]->getType();
+            if(tiles[x][y]->playerOn == true)
+            {
+                cout << 'X' << " ";
+            }
+            else
+            {
+                cout << tiles[x][y]->getType() << " ";
+            }
         }
         cout << endl;
     }
@@ -219,16 +256,21 @@ void Labyrinthe::afficherLabyrinthe()
     {
         for(int x = 0; x < xLenght; x++)
         {
-            if(y == 0 || y == yLenght-1 || x == 0 || x == xLenght-1 || tiles[x][y]->getVisited() == true || tiles[x][y]->getVisible() == true)
+            if(tiles[x][y]->playerOn == true)
             {
-                cout << tiles[x][y]->getType();
+                cout << 'X' << " ";
+            }
+            else if(y == 0 || y == yLenght-1 || x == 0 || x == xLenght-1 || tiles[x][y]->getVisited() == true || tiles[x][y]->getVisible() == true)
+            {
+                cout << tiles[x][y]->getType() << " ";
             }
             else
             {
-                cout << " ";
+                cout << " " << " ";
             }
             
         }
         cout << endl;
     }
+    cout << *player << endl << endl;
 }

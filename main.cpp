@@ -11,7 +11,6 @@ int main()
 {
     cout << "Testing" << endl;
     Labyrinthe lab;
-
     char dir;
     while((dir = getch()) != 'q')
     {

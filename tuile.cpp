@@ -1,8 +1,14 @@
 using namespace std;
+
 #include <iostream>
 #include <string.h>
 #include <random>
 #include "tuile.h"
+#include <thread>
+#include <chrono>
+#include <conio.h>
+
+bool fight;
 
 Tuile::Tuile() : visible(false) {}
 
@@ -60,40 +66,102 @@ void Tuile::setTuile(char c)
     type = c;
 }
 
-void Tuile::playerEffect(Joueur player)
+void timer()
+{
+    this_thread::sleep_for(3s);
+    fight = false;
+}
+
+Joueur Tuile::playerEffect(Joueur player)
 {
     int damage;
-    int factor;
+    int factor = 100;
+    int heal;
     switch (this->type)
     {
         case 'M':
-            factor = 100; //Facteur à définir avec mouvement de l'accéléromètre
-            damage = rand() % factor;
-            if((player.getHealth()) - damage < 0)
+        {
+            cout << "===FIGHT===";
+            fight = true;
+            thread time1(timer);
+            bool fightInit = true;
+            char lastInput = 0;
+            char keyInput = 0;
+            while(fight)
+            {
+                while (kbhit())
+                {
+                    keyInput = getch();
+                    if(keyInput == 'a' || keyInput == 'd')
+                    {
+                        if(fightInit)
+                        {
+                            lastInput = keyInput;
+                            fightInit = false;
+                            factor-=2;
+                        }
+                        else
+                        {
+                            if(keyInput == 'a' && lastInput == 'd')
+                            {
+                                lastInput = 'a';
+                                factor-=2;
+                            }
+                            else if(keyInput == 'd' && lastInput == 'a')
+                            {
+                                lastInput = 'd';
+                                factor-=2;
+                            }
+                        }
+                    }
+                }
+                this_thread::sleep_for(25ms);
+            }
+            time1.join();
+            srand((unsigned int)time(NULL));
+            damage = rand()%factor;
+            cout<<damage<< " " << factor;
+            if((player.getHealth() - damage) < 0)
             {
                 player.setHealth(0);
             }
+            else
+            {
+                player.setHealth(player.getHealth() - damage);
+            }
             type = '-';
             break;
-        
+        }
+
         case 'T':
             damage = rand() % 20 + 5;
             if((player.getHealth() - damage) < 0)
             {
                 player.setHealth(0);
             }
+            else
+            {
+                player.setHealth(player.getHealth() - damage);
+            }
             break;
 
         case 'C':
-            int heal = rand() % 50 + 20;
+            heal = rand() % 50 + 20;
             if((player.getHealth() + heal) > player.getMaxHealth())
             {
                 player.setHealth(player.getMaxHealth());
             }
+            else
+            {
+                player.setHealth(player.getHealth() + heal);
+            }
+            type = '-';
             break;
-            
-    
+
+        default:
+            break;
     }
+    return player;
 }
 
 void Tuile::setVisited()
