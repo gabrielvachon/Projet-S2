@@ -26,12 +26,14 @@ Labyrinthe::Labyrinthe()
 {
     player = new Joueur(1, 100);
     labConstructor("modele1.txt");
+    completed = false;
 }
 
 Labyrinthe::Labyrinthe(/*const string& pFile,*/ Joueur* pPlayer)
 {
     player = pPlayer;
     labConstructor("modele1.txt");
+    completed = false;
 }
 
 Labyrinthe::~Labyrinthe()
@@ -76,6 +78,7 @@ bool Labyrinthe::mouvement(char c)
     else if(this->getEnd().x == x && this->getEnd().y == y)
     {
         player->setPos(x,y);
+        completed = true;
         system("CLS");
         cout << "Winner winner chicken dinner" << endl;
     }
@@ -256,4 +259,9 @@ void Labyrinthe::afficherLabyrinthe()
         cout << endl;
     }
     cout << *player << endl << endl;
+}
+
+bool Labyrinthe::isCompleted()
+{
+    return completed;
 }

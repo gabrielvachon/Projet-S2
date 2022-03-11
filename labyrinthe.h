@@ -22,6 +22,7 @@ class Labyrinthe
         void labConstructor(string);
         bool mouvement(char);
         void visibilite(int, int);
+        bool isCompleted();
         //int getXLenght(); //Retourne longueur du labyrinthe
         //int getYLenght(); //Retourne largeur du labyrinthe
 
@@ -30,6 +31,7 @@ class Labyrinthe
         int yLenght;
         Tuile*** tiles; //Tableau de tuiles
         Joueur *player;
+        bool completed;
 };
 
 #endif

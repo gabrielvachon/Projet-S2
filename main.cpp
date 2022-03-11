@@ -13,7 +13,7 @@ int main()
     string newLabFile = "modele1.txt";
     Labyrinthe lab(/*newLabFile, */newPlayer);
     char dir;
-    while((dir = getch()) != 'q')
+    while((dir = getch()) != 'q' && !(lab.isCompleted()))
     {
         lab.mouvement(dir);
     }
