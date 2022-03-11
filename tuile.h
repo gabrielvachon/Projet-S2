@@ -18,7 +18,7 @@ using namespace std;
     cause la mort du joueur si aucune intéraction détectée,
     case monstre disparaît après un passage)(avec accéléromètre)
     T : piège (enlève de la vie à chaque passage)
-    C : trésor (joueur regagne un certain nombre de vie)
+    H : trésor (joueur regagne un certain nombre de vie)
     # : mur (le joueur ne peu passer sur cette case)
     - : case vide (le joueur est libre d'y circuler sans pénalité
     ou avantages)

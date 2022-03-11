@@ -41,7 +41,7 @@ string Tuile::getTypeName()
             return "Piège";
             break;
 
-        case 'C':
+        case 'H':
             return "Trésor";
             break;
 
@@ -145,7 +145,7 @@ Joueur Tuile::playerEffect(Joueur player)
             }
             break;
 
-        case 'C':
+        case 'H':
             heal = rand() % 50 + 20;
             if((player.getHealth() + heal) > player.getMaxHealth())
             {

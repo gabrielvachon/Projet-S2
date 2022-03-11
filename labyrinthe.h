@@ -4,8 +4,7 @@
 #include <iostream>
 #include "tuile.h"
 #include "joueur.h"
-#include <vector>
-#include <string>
+#include <string.h>
 
 using namespace std;
 
@@ -13,7 +12,7 @@ class Labyrinthe
 {
     public:
         Labyrinthe();
-        Labyrinthe(string); //Constructeur d'un labyrinthe prédéfini
+        Labyrinthe(/*const string&,*/Joueur*); //Constructeur d'un labyrinthe prédéfini
         ~Labyrinthe();
 
         Tuile* getTile(int x, int y); //Retourne la case désirée
@@ -27,7 +26,6 @@ class Labyrinthe
         //int getYLenght(); //Retourne largeur du labyrinthe
 
     private:
-        bool fight;
         int xLenght;
         int yLenght;
         Tuile*** tiles; //Tableau de tuiles
