@@ -49,3 +49,33 @@ position Joueur::getPos()
 {
     return pos;
 }
+
+void Flamingo::actif()
+{
+
+}
+
+void Flamingo::passif()
+{
+    
+}
+
+void Jp::actif()
+{
+
+}
+
+void Jp::passif()
+{
+    
+}
+
+void Moore::actif()
+{
+
+}
+
+void Moore::passif()
+{
+    
+}
