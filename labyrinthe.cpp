@@ -1,16 +1,16 @@
-using namespace std; 
-
 #include "labyrinthe.h"
 #include "tuile.h"
 #include "position.h"
 #include <fstream>
-#include <string.h>
+#include <string>
+
+using namespace std; 
 
 //--------MODÈLE---------
 //# # # # # # # # # # # #
 //S - - - - - - - - - - #
 //# - # # # T # # - # - #
-//# - # C # - # # - # - #
+//# - # H # - # # - # - #
 //# - - - # - - # - # # #
 //# - # # # # # # - # M #
 //# # # # - - # - - # - #
@@ -26,11 +26,14 @@ Labyrinthe::Labyrinthe()
 {
     player = new Joueur(1, 100);
     labConstructor("modele1.txt");
+    completed = false;
 }
 
-Labyrinthe::Labyrinthe(string fname)
+Labyrinthe::Labyrinthe(/*const string& pFile,*/ Joueur* pPlayer)
 {
-    labConstructor(fname);
+    player = pPlayer;
+    labConstructor("modele1.txt");
+    completed = false;
 }
 
 Labyrinthe::~Labyrinthe()
@@ -42,72 +45,55 @@ bool Labyrinthe::mouvement(char c)
 {
     int x = 0;
     int y = 0;
+    int lastX = player->getPos().x;
+    int lastY = player->getPos().y;
     Joueur newPlayerStats;
     switch (c)
     {
         case 'w':
             x = player->getPos().x; //Garder position en X
             y = player->getPos().y - 1; //Décrémenter position en Y
-            if(tiles[x][y]->getType() == '#' || y < 0)
-            {
-                return false;
-            }
-            else
-            {
-                tiles[x][y+1]->playerOn = false;
-                newPlayerStats = tiles[x][y]->playerEffect(*player);
-            }
             break;
         case 'd':
             x = player->getPos().x + 1;
             y = player->getPos().y;
-            if(tiles[x][y]->getType() == '#' || x >= xLenght)
-            {
-                return false;
-            }
-            else
-            {
-                tiles[x-1][y]->playerOn = false;
-                newPlayerStats = tiles[x][y]->playerEffect(*player);
-            }
             break;
         case 's':
             x = player->getPos().x;
             y = player->getPos().y + 1;
-            if(tiles[x][y]->getType() == '#' || y > yLenght)
-            {
-                return false;
-            }
-            else
-            {
-                tiles[x][y-1]->playerOn = false;
-                newPlayerStats = tiles[x][y]->playerEffect(*player);
-            }
             break;
         case 'a':
             x = player->getPos().x - 1;
             y = player->getPos().y;
-            if(tiles[x][y]->getType() == '#' || x < 0)
-            {
-                return false;
-            }
-            else
-            {
-                tiles[x+1][y]->playerOn = false;
-                newPlayerStats = tiles[x][y]->playerEffect(*player);
-            }
             break;
         
         default:
             break;
     }
-    *player = newPlayerStats;
-    tiles[x][y]->setVisited();
-    tiles[x][y]->playerOn = true;
-    player->setPos(x,y);
-    visibilite(x,y);
-    afficherLabyrinthe();
-    return true;
+
+    if(x < 0 || y < 0 || x >= this->xLenght - 1 || y >= this->yLenght - 1 || tiles[x][y]->getType() == '#')
+    {
+        return false;
+    }
+    else if(this->getEnd().x == x && this->getEnd().y == y)
+    {
+        player->setPos(x,y);
+        completed = true;
+        system("CLS");
+        cout << "Winner winner chicken dinner" << endl;
+    }
+    else
+    {
+        tiles[lastX][lastY]->playerOn = false;
+        tiles[x][y]->playerOn = true;
+        newPlayerStats = tiles[x][y]->playerEffect(*player);
+        *player = newPlayerStats;
+        player->setPos(x,y);
+        visibilite(x,y);
+        afficherLabyrinthe();
+        return true;
+    }
+    return false;
 }
 
 void Labyrinthe::visibilite(int x, int y)
@@ -273,4 +259,9 @@ void Labyrinthe::afficherLabyrinthe()
         cout << endl;
     }
     cout << *player << endl << endl;
+}
+
+bool Labyrinthe::isCompleted()
+{
+    return completed;
 }

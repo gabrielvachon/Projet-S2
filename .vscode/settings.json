@@ -20,6 +20,22 @@
         "iostream": "cpp",
         "fstream": "cpp",
         "thread": "cpp",
-        "chrono": "cpp"
-    }
+        "chrono": "cpp",
+        "charconv": "cpp",
+        "format": "cpp",
+        "iomanip": "cpp",
+        "locale": "cpp",
+        "random": "cpp",
+        "sstream": "cpp",
+        "stdexcept": "cpp",
+        "string": "cpp",
+        "typeinfo": "cpp",
+        "xiosbase": "cpp",
+        "xlocbuf": "cpp",
+        "xlocmes": "cpp",
+        "xlocmon": "cpp",
+        "xlocnum": "cpp",
+        "xloctime": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "Enabled"
 }
