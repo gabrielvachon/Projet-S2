@@ -31,6 +31,28 @@ class Joueur
         position pos;        
 };
 
+class Flamingo : public Joueur
+{
+    public:
+        void passif();
+        void actif();
+    private:
+};
 
+class Jp : public Joueur
+{
+    public:
+        void passif();
+        void actif();
+    private:
+};
+
+class Moore : public Joueur
+{
+    public:
+        void passif();
+        void actif();
+    private:
+};
 
 #endif
