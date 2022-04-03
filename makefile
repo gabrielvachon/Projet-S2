@@ -4,10 +4,10 @@ Labyrinthe: main.o joueur.o labyrinthe.o tuile.o
 main.o : main.cpp labyrinthe.h tuile.h joueur.h position.h
 	g++ -g -c main.cpp
 
-labyrinthe.o: labyrinthe.cpp labyrinthe.h tuile.h position.h
+labyrinthe.o: labyrinthe.cpp labyrinthe.h tuile.h joueur.h
 	g++ -g -c labyrinthe.cpp
 
-joueur.o: joueur.cpp joueur.h position.h
+joueur.o: joueur.cpp joueur.h position.h labyrinthe.h
 	g++ -g -c joueur.cpp
 
 tuile.o: tuile.cpp tuile.h

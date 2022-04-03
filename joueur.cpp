@@ -1,6 +1,7 @@
 #include "joueur.h"
 #include "iostream"
 #include <string.h>
+#include "labyrinthe.h"
 
 Joueur::Joueur()
 {}
@@ -50,32 +51,62 @@ position Joueur::getPos()
     return pos;
 }
 
-void Flamingo::actif()
-{
+void Joueur::actif(Labyrinthe*){}
+void Joueur::passif(Labyrinthe*){}
 
+Flamingo::Flamingo(int pRange, int pMaxHealth)
+{
+    this->maxHealth = pMaxHealth;
+    this->health = pMaxHealth;
+    this->viewRange = pRange;
+}
+Flamingo::~Flamingo(){}
+
+void Flamingo::actif(Labyrinthe *lab)
+{
+    health -= 10;
+    lab->setMoveWeight(2);
 }
 
-void Flamingo::passif()
+void Flamingo::passif(Labyrinthe *lab)
+{
+    lab->setRayon(2);
+}
+
+Jp::Jp(int pRange, int pMaxHealth)
+{
+    this->maxHealth = pMaxHealth;
+    this->health = pMaxHealth;
+    this->viewRange = pRange;
+}
+
+Jp::~Jp(){}
+
+void Jp::actif(Labyrinthe *lab)
 {
     
 }
 
-void Jp::actif()
-{
-
-}
-
-void Jp::passif()
+void Jp::passif(Labyrinthe *lab)
 {
     
 }
 
-void Moore::actif()
+Moore::Moore(int pRange, int pMaxHealth)
+{
+    this->maxHealth = pMaxHealth;
+    this->health = pMaxHealth;
+    this->viewRange = pRange;
+}
+
+Moore::~Moore(){}
+
+void Moore::actif(Labyrinthe *lab)
 {
 
 }
 
-void Moore::passif()
+void Moore::passif(Labyrinthe *lab)
 {
-    
+    lab->setHeal(true);
 }

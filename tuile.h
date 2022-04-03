@@ -4,7 +4,8 @@
 using namespace std;
 #include <iostream>
 #include <string.h>
-#include "joueur.h"
+//#include "joueur.h"
+class Joueur;
 
 /*
     Classe qui détermine les caractéristiques d'une tuile du labyrinthe.
@@ -42,12 +43,14 @@ class Tuile
         bool getVisited();
         void setVisible(bool);
         bool getVisible();
+        void setFullHeal(bool);
         bool playerOn;
         
     private:
         char type;
         bool visited;
         bool visible;
+        int heal;
 };
 
 #endif

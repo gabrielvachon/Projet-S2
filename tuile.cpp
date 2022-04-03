@@ -4,16 +4,21 @@ using namespace std;
 #include <string.h>
 #include <random>
 #include "tuile.h"
+#include "joueur.h"
 #include <thread>
 #include <chrono>
 #include <conio.h>
 
 bool fight;
 
-Tuile::Tuile() : visible(false) {}
+Tuile::Tuile() : visible(false) {
+    heal = rand() % 50 + 20;
+}
 
 Tuile::Tuile(char typeTuile)
-: type(typeTuile), visible(false) {}
+: type(typeTuile), visible(false) {
+    heal = rand() % 50 + 20;
+}
 
 Tuile::~Tuile() {}
 
@@ -76,7 +81,6 @@ Joueur Tuile::playerEffect(Joueur player)
 {
     int damage;
     int factor = 100;
-    int heal;
     switch (this->type)
     {
         case 'M':
@@ -146,7 +150,6 @@ Joueur Tuile::playerEffect(Joueur player)
             break;
 
         case 'H':
-            heal = rand() % 50 + 20;
             if((player.getHealth() + heal) > player.getMaxHealth())
             {
                 player.setHealth(player.getMaxHealth());
@@ -182,6 +185,12 @@ void Tuile::setVisible(bool v)
 bool Tuile::getVisible()
 {
     return visible;
+}
+
+void Tuile::setFullHeal(bool h)
+{
+    if(h == true)
+        heal = 100;
 }
 
 Tuile & Tuile::operator = (const Tuile& input)

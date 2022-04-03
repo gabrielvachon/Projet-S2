@@ -9,7 +9,8 @@ using namespace std;
 int main()
 {
     cout << "Testing" << endl;
-    Joueur* newPlayer = new Joueur(1, 100);
+    //Joueur* newPlayer = new Joueur(1, 100);
+    Joueur* newPlayer = new Moore(1, 100);
     string newLabFile = "modele1.txt";
     Labyrinthe lab(/*newLabFile, */newPlayer);
     char dir;
@@ -17,6 +18,7 @@ int main()
     {
         lab.mouvement(dir);
     }
+    system("CLS");
     delete newPlayer;
     return 0;
 }

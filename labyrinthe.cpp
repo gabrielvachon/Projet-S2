@@ -25,6 +25,8 @@ string tileName;
 Labyrinthe::Labyrinthe()
 {
     player = new Joueur(1, 100);
+    ray = 1;
+    moveWeight = 1;
     labConstructor("modele1.txt");
     completed = false;
 }
@@ -32,8 +34,12 @@ Labyrinthe::Labyrinthe()
 Labyrinthe::Labyrinthe(/*const string& pFile,*/ Joueur* pPlayer)
 {
     player = pPlayer;
+    ray = 1;
+    moveWeight = 1;
+    heal = false;
     labConstructor("modele1.txt");
     completed = false;
+    player->passif(this);
 }
 
 Labyrinthe::~Labyrinthe()
@@ -48,22 +54,27 @@ bool Labyrinthe::mouvement(char c)
     int lastX = player->getPos().x;
     int lastY = player->getPos().y;
     Joueur newPlayerStats;
+    char type;
+    if(c == '1')
+    {
+        player->actif(this);
+    }
     switch (c)
     {
         case 'w':
             x = player->getPos().x; //Garder position en X
-            y = player->getPos().y - 1; //Décrémenter position en Y
+            y = player->getPos().y - moveWeight; //Décrémenter position en Y
             break;
         case 'd':
-            x = player->getPos().x + 1;
+            x = player->getPos().x + moveWeight;
             y = player->getPos().y;
             break;
         case 's':
             x = player->getPos().x;
-            y = player->getPos().y + 1;
+            y = player->getPos().y + moveWeight;
             break;
         case 'a':
-            x = player->getPos().x - 1;
+            x = player->getPos().x - moveWeight;
             y = player->getPos().y;
             break;
         
@@ -84,6 +95,11 @@ bool Labyrinthe::mouvement(char c)
     }
     else
     {
+        type = tiles[x][y]->getType();
+        if(type == 'H')
+        {
+            tiles[x][y]->setFullHeal(heal);
+        }
         tiles[lastX][lastY]->playerOn = false;
         tiles[x][y]->playerOn = true;
         newPlayerStats = tiles[x][y]->playerEffect(*player);
@@ -91,6 +107,7 @@ bool Labyrinthe::mouvement(char c)
         player->setPos(x,y);
         visibilite(x,y);
         afficherLabyrinthe();
+        moveWeight = 1;
         return true;
     }
     return false;
@@ -98,32 +115,77 @@ bool Labyrinthe::mouvement(char c)
 
 void Labyrinthe::visibilite(int x, int y)
 {
-    if(x == 0)
+    int ray_up = ray;
+    int ray_down = ray;
+    int ray_left = ray;
+    int ray_right = ray;
+
+    for(int i = 1; i <= ray; i++)
     {
-        tiles[x][y+1]->setVisible(true);
-        tiles[x][y-1]->setVisible(true);
-        tiles[x+1][y+1]->setVisible(true);
-        tiles[x+1][y-1]->setVisible(true);
-        tiles[x+1][y]->setVisible(true);
+        if(x - ray_left < 0)
+        {
+            ray_left--;
+        }
+        if(x + ray_right > xLenght-1)
+        {
+            ray_right--;
+        }
+        if(y - ray_up < 0)
+        {
+            ray_up--;
+        }
+        if(y + ray_down > yLenght-1)
+        {
+            ray_down--;
+        }
     }
-    else if(x == xLenght-1)
+    for(int i = 1; i <= ray_left; i++)
     {
-        tiles[x][y+1]->setVisible(true);
-        tiles[x][y-1]->setVisible(true);
-        tiles[x-1][y+1]->setVisible(true);
-        tiles[x-1][y-1]->setVisible(true);
-        tiles[x-1][y]->setVisible(true);
+        if(i <= ray_up)
+        {
+            tiles[x-i][y-i]->setVisible(true);
+        }
+        tiles[x-i][y]->setVisible(true);
+        if(i <= ray_down)
+        {
+            tiles[x-i][y+i]->setVisible(true);
+        }
     }
-    else
+    for(int i = 1; i <= ray_right; i++)
     {
-        tiles[x][y+1]->setVisible(true);
-        tiles[x][y-1]->setVisible(true);
-        tiles[x+1][y+1]->setVisible(true);
-        tiles[x+1][y-1]->setVisible(true);
-        tiles[x+1][y]->setVisible(true);
-        tiles[x-1][y]->setVisible(true);
-        tiles[x-1][y+1]->setVisible(true);
-        tiles[x-1][y-1]->setVisible(true);
+        if(i <= ray_up)
+        {
+            tiles[x+i][y-i]->setVisible(true);
+        }
+        tiles[x+i][y]->setVisible(true);
+        if(i <= ray_down)
+        {
+            tiles[x+i][y+i]->setVisible(true);
+        }
+    }
+    for(int i = 1; i <= ray_up; i++)
+    {
+        for(int j = 1; j <= ray_left; j++)
+        {
+            tiles[x-j][y-i]->setVisible(true);
+        }
+        tiles[x][y-i]->setVisible(true);
+        for(int j = 1; j <= ray_right; j++)
+        {
+            tiles[x+j][y-i]->setVisible(true);
+        }
+    }
+    for(int i = 1; i <= ray_down; i++)
+    {
+        tiles[x][y+i]->setVisible(true);
+        for(int j = 1; j <= ray_left; j++)
+        {
+            tiles[x-j][y+i]->setVisible(true);
+        }
+        for(int j = 1; j <= ray_right; j++)
+        {
+            tiles[x+j][y+i]->setVisible(true);
+        }
     }
 }
 
@@ -215,6 +277,8 @@ void Labyrinthe::labConstructor(string fname)
 
 Tuile* Labyrinthe::getTile(int x, int y)
 {
+    if(x < 0 || x < xLenght-1 || y < 0 || y > yLenght-1)
+        return NULL;
     return tiles[x][y];
 }
 
@@ -259,6 +323,21 @@ void Labyrinthe::afficherLabyrinthe()
         cout << endl;
     }
     cout << *player << endl << endl;
+}
+
+void Labyrinthe::setRayon(int r)
+{
+    ray = r;
+}
+
+void Labyrinthe::setMoveWeight(int m)
+{
+    moveWeight = m;
+}
+
+void Labyrinthe::setHeal(bool h)
+{
+    heal = h;
 }
 
 bool Labyrinthe::isCompleted()
